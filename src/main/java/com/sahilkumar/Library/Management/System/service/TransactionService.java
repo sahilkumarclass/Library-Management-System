@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface TransactionService {
     TransactionResponse issue(IssueBookRequest req);
+    TransactionResponse borrow(Long bookId, String userEmail);
     TransactionResponse returnBook(Long transactionId);
     Page<TransactionResponse> listAll(Pageable pageable);
     Page<TransactionResponse> listByUser(Long userId, Pageable pageable);

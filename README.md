@@ -184,8 +184,8 @@ Log out and back in to refresh your role.
 
 | | |
 |---|---|
-| ![Login](docs/screenshots/login.png) | ![Dashboard](docs/screenshots/dashboard.png) |
-| ![Books](docs/screenshots/books.png) | ![Issue dialog](docs/screenshots/issue.png) |
+| ![Login](public/login.png) | ![Dashboard](public/dashboard.png) |
+| ![Books](public/books.png) | ![Issue dialog](public/issue.png) |
 
 ---
 
@@ -224,7 +224,8 @@ All authenticated endpoints expect `Authorization: Bearer <token>`.
 
 | Method | Path | Auth | Notes |
 |---|---|---|---|
-| `POST` | `/api/transactions/issue` | ADMIN | `{ bookId, userId }` |
+| `POST` | `/api/transactions/issue` | ADMIN | `{ bookId, userId }` — issue to a chosen member |
+| `POST` | `/api/transactions/borrow` | any user | `{ bookId }` — issues to the current user |
 | `POST` | `/api/transactions/{id}/return` | ADMIN | computes fine |
 | `GET` | `/api/transactions` | ADMIN | paginated |
 | `GET` | `/api/transactions/me` | any user | own history |

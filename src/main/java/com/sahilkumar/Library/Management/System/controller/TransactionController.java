@@ -1,5 +1,6 @@
 package com.sahilkumar.Library.Management.System.controller;
 
+import com.sahilkumar.Library.Management.System.dto.request.BorrowBookRequest;
 import com.sahilkumar.Library.Management.System.dto.request.IssueBookRequest;
 import com.sahilkumar.Library.Management.System.dto.response.PageResponse;
 import com.sahilkumar.Library.Management.System.dto.response.TransactionResponse;
@@ -32,6 +33,13 @@ public class TransactionController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<TransactionResponse> issue(@Valid @RequestBody IssueBookRequest req) {
         return ResponseEntity.status(HttpStatus.CREATED).body(transactionService.issue(req));
+    }
+
+    @PostMapping("/borrow")
+    public ResponseEntity<TransactionResponse> borrow(@Valid @RequestBody BorrowBookRequest req,
+                                                     Authentication auth) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(transactionService.borrow(req.getBookId(), auth.getName()));
     }
 
     @PostMapping("/{id}/return")

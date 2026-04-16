@@ -64,6 +64,15 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public TransactionResponse borrow(Long bookId, String userEmail) {
+        AppUser user = userService.findEntityByEmail(userEmail);
+        return issue(IssueBookRequest.builder()
+                .bookId(bookId)
+                .userId(user.getId())
+                .build());
+    }
+
+    @Override
     public TransactionResponse returnBook(Long transactionId) {
         Transaction txn = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> ResourceNotFoundException.of("Transaction", transactionId));
