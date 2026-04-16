@@ -1,0 +1,10 @@
+# Copy to `application-local.properties` and fill in real values.
+# That file is gitignored, so secrets never reach the repo.
+
+# Neon Postgres — copy from Neon dashboard, then PREPEND `jdbc:`
+spring.datasource.url=jdbc:postgresql://<your-neon-host>/<your-db>?sslmode=require
+spring.datasource.username=<your-neon-role>
+spring.datasource.password=<your-neon-password>
+
+# Generate with: openssl rand -base64 48
+app.jwt.secret=<at-least-32-chars-base64-or-random>

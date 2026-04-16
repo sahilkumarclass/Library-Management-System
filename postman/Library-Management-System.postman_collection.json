@@ -1,0 +1,149 @@
+{
+  "info": {
+    "name": "Library Management System",
+    "_postman_id": "lms-spring-boot-react-2026",
+    "description": "REST API for the Library Management System (Spring Boot + JWT). Login first — the response script captures the token into the `jwt` collection variable, after which the Authorization header is set automatically.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api" },
+    { "key": "jwt", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{jwt}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sukrit\",\n  \"email\": \"sukrit@example.com\",\n  \"password\": \"Passw0rd!\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register",
+            "auth": { "type": "noauth" }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.token) {",
+                  "  pm.collectionVariables.set('jwt', json.token);",
+                  "  console.log('JWT captured');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"sukrit@example.com\",\n  \"password\": \"Passw0rd!\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login",
+            "auth": { "type": "noauth" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Books",
+      "item": [
+        {
+          "name": "List books (paginated)",
+          "request": { "method": "GET", "url": "{{baseUrl}}/books?page=0&size=10&sort=id,asc" }
+        },
+        {
+          "name": "Get book by id",
+          "request": { "method": "GET", "url": "{{baseUrl}}/books/1" }
+        },
+        {
+          "name": "Search books",
+          "request": { "method": "GET", "url": "{{baseUrl}}/books/search?q=clean&by=title" }
+        },
+        {
+          "name": "Create book (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Clean Code\",\n  \"author\": \"Robert C. Martin\",\n  \"isbn\": \"9780132350884\"\n}"
+            },
+            "url": "{{baseUrl}}/books"
+          }
+        },
+        {
+          "name": "Update book (ADMIN)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Clean Code (2nd ed.)\",\n  \"author\": \"Robert C. Martin\",\n  \"isbn\": \"9780132350884\"\n}"
+            },
+            "url": "{{baseUrl}}/books/1"
+          }
+        },
+        {
+          "name": "Delete book (ADMIN)",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/books/1" }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        { "name": "List users (ADMIN)", "request": { "method": "GET", "url": "{{baseUrl}}/users?page=0&size=10" } },
+        { "name": "Get user by id", "request": { "method": "GET", "url": "{{baseUrl}}/users/1" } },
+        {
+          "name": "Update user",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sukrit Updated\",\n  \"email\": \"sukrit@example.com\"\n}"
+            },
+            "url": "{{baseUrl}}/users/1"
+          }
+        },
+        { "name": "Delete user (ADMIN)", "request": { "method": "DELETE", "url": "{{baseUrl}}/users/1" } }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "Issue book (ADMIN)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"bookId\": 1,\n  \"userId\": 2\n}" },
+            "url": "{{baseUrl}}/transactions/issue"
+          }
+        },
+        {
+          "name": "Return book (ADMIN)",
+          "request": { "method": "POST", "url": "{{baseUrl}}/transactions/1/return" }
+        },
+        { "name": "List all transactions (ADMIN)", "request": { "method": "GET", "url": "{{baseUrl}}/transactions?page=0&size=10&sort=id,desc" } },
+        { "name": "My transactions", "request": { "method": "GET", "url": "{{baseUrl}}/transactions/me?page=0&size=10" } }
+      ]
+    }
+  ]
+}
