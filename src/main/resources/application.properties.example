@@ -8,3 +8,38 @@ spring.datasource.password=<your-neon-password>
 
 # Generate with: openssl rand -base64 48
 app.jwt.secret=<at-least-32-chars-base64-or-random>
+
+
+
+# ---------- Library rules ----------
+# Loan period (days from issue to due date) and overdue fine per day.
+app.library.loan-period-days=
+app.library.fine-per-day=
+
+
+# HikariCP tuning for Neon serverless (keeps pool lean, accounts for cold starts)
+spring.datasource.hikari.maximum-pool-size=5
+spring.datasource.hikari.minimum-idle=1
+spring.datasource.hikari.idle-timeout=30000
+spring.datasource.hikari.connection-timeout=30000
+
+
+# ---------- JPA / Hibernate ----------
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.open-in-view=false
+
+
+# ---------- Server ----------
+server.port=8080
+
+# ---------- CORS ----------
+app.cors.allowed-origins=http://localhost:5173
+
+
+# ---------- JWT ----------
+# Default is for local dev only. Set JWT_SECRET in env (or override below) for prod.
+#app.jwt.secret=${JWT_SECRET:dev-only-secret-change-in-prod-please-rotate-to-32plus-chars-base64}
+app.jwt.secret=
