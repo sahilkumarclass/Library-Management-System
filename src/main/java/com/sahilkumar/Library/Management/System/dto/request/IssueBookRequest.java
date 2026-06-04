@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,4 +21,8 @@ public class IssueBookRequest {
 
     @NotNull(message = "userId is required")
     private Long userId;
+
+    // Optional. When provided, overrides the default (issueDate + loan period).
+    // Useful for testing overdue fines by issuing with a past due date.
+    private LocalDate dueDate;
 }
