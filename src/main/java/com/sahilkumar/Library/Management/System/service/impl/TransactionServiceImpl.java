@@ -16,6 +16,7 @@ import com.sahilkumar.Library.Management.System.service.BookService;
 import com.sahilkumar.Library.Management.System.service.TransactionService;
 import com.sahilkumar.Library.Management.System.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,11 @@ import java.time.temporal.ChronoUnit;
 @Transactional
 public class TransactionServiceImpl implements TransactionService {
 
-    private static final int LOAN_PERIOD_DAYS = 14;
-    private static final BigDecimal FINE_PER_DAY = BigDecimal.valueOf(5);
+    @Value("${app.library.loan-period-days:14}")
+    private int loanPeriodDays;
+
+    @Value("${app.library.fine-per-day:5}")
+    private BigDecimal finePerDay;
 
     private final TransactionRepository transactionRepository;
     private final BookRepository bookRepository;
@@ -48,11 +52,14 @@ public class TransactionServiceImpl implements TransactionService {
         AppUser user = userService.findEntityById(req.getUserId());
 
         LocalDate today = LocalDate.now();
+        LocalDate dueDate = req.getDueDate() != null
+                ? req.getDueDate()
+                : today.plusDays(loanPeriodDays);
         Transaction txn = Transaction.builder()
                 .book(book)
                 .user(user)
                 .issueDate(today)
-                .dueDate(today.plusDays(LOAN_PERIOD_DAYS))
+                .dueDate(dueDate)
                 .fine(BigDecimal.ZERO)
                 .status(TransactionStatus.ISSUED)
                 .build();
@@ -83,7 +90,7 @@ public class TransactionServiceImpl implements TransactionService {
         LocalDate today = LocalDate.now();
         long daysLate = ChronoUnit.DAYS.between(txn.getDueDate(), today);
         BigDecimal fine = daysLate > 0
-                ? FINE_PER_DAY.multiply(BigDecimal.valueOf(daysLate))
+                ? finePerDay.multiply(BigDecimal.valueOf(daysLate))
                 : BigDecimal.ZERO;
 
         txn.setReturnDate(today);
